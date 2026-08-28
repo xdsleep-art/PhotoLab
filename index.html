@@ -263,6 +263,9 @@ downloadBtn.addEventListener('click', () => {
   // 3. Simular el clic y limpiar el enlace
   downloadLink.click();
 });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
   </script>
 
 </body>
