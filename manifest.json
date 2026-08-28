@@ -1,0 +1,20 @@
+{
+  "name": "Game Boy Dither Cam",
+  "short_name": "GBCamera",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f380f",
+  "theme_color": "#0f380f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
