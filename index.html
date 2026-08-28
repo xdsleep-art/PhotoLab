@@ -34,10 +34,6 @@
 
   <h1>Filtro Game Boy 🎮</h1>
   <input type="file" id="imageInput" accept="image/*">
-  <video id="video" autoplay playsinline style="width: 100%; max-width: 400px; display: none;"></video>
-<button id="startCamBtn">Abrir Cámara 🎥</button>
-<button id="snapBtn" style="display: none;">Tomar Foto 📸</button>
-<button id="switchCamBtn" style="display: none;">Cambiar cámara 🔄</button>
   <div id="controls" style="margin: 15px 0; text-align: center;">
   <div>
     <label for="ditherMethod">Método de Dithering: </label>
@@ -73,34 +69,6 @@
   <canvas id="gameboyCanvas" width="1080" height="972"></canvas>
 
   <script>
-    const video = document.getElementById('video');
-const startCamBtn = document.getElementById('startCamBtn');
-const snapBtn = document.getElementById('snapBtn');
-
-startCamBtn.addEventListener('click', async () => {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" } // "environment" = trasera | "user" = frontal
-    });
-    video.srcObject = stream;
-    video.style.display = 'block';
-    snapBtn.style.display = 'inline-block';
-  } catch (err) {
-    alert("Error al acceder a la cámara: " + err);
-  }
-});
-
-snapBtn.addEventListener('click', () => {
-  // Transferir el fotograma del vídeo al canvas
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  
-  // Guardar los datos de imagen para tu función de procesado actual
-  loadedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  
-  // Ejecutar tu función de procesado Game Boy
-  processImage();
-});
-
  // 1. Selección de elementos del DOM
 const imageInput = document.getElementById('imageInput');
 const canvas = document.getElementById('gameboyCanvas');
