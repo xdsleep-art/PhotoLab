@@ -4,7 +4,8 @@ const ASSETS = [
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './script.js',
 ];
 
 // Instalación: Guardar archivos en la caché 💾
