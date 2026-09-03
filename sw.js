@@ -6,7 +6,7 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './script.js',
-  './styles.css'
+  './style.css'
 ];
 
 // Instalación: Guardar archivos en la caché 💾
