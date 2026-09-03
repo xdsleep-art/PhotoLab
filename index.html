@@ -7,74 +7,116 @@
     <meta name="theme-color" content="#0f380f">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Game Boy Camera Filter</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #222;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    canvas {
-      border: 2px solid #555;
-      margin-top: 20px;
-      max-width: 100%;
-      /* Mantiene los píxeles nítidos sin suavizado automático */
-      image-rendering: pixelated; 
-    }
-
-    #gradientBar {
-      width: 100%;
-      height: 24px;
-      border: 1px solid #000000;
-      margin: 10px 0;
-      box-sizing: border-box;
-}
-  </style>
 </head>
+
 <body>
 
-  <h1>Filtro Game Boy 🎮</h1>
-  <input type="file" id="imageInput" accept="image/*">
-  <div id="controls" style="margin: 15px 0; text-align: center;">
+  <h1>PhotoLab</h1>
+ <!-- botón de cargar imagen -->
+<button type="button" id="loadImgBtn" class="expand">
+  <span class="btn-text">Cargar Imagen</span>
+  <span class="expand-icon expand-hover">
+    <svg class="first" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 32 32">
+      <path d="M8.489 31.975c-0.271 0-0.549-0.107-0.757-0.316-0.417-0.417-0.417-1.098 0-1.515l14.258-14.264-14.050-14.050c-0.417-0.417-0.417-1.098 0-1.515s1.098-0.417 1.515 0l14.807 14.807c0.417 0.417 0.417 1.098 0 1.515l-15.015 15.022c-0.208 0.208-0.486 0.316-0.757 0.316z"/>
+    </svg>
+    <span class="loader"></span>
+    <svg class="second" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 5L8 15l-5-4"/>
+    </svg>
+  </span>
+</button>
+<!--  input de archivo (oculto en segundo plano) -->
+<input type="file" id="imageInput" accept="image/*" style="display: none;">
+<!-- botón de filtro -->
+<div id="controls" style="margin: 15px 0; text-align: center;">
   <div>
-    <label for="ditherMethod">Método de Dithering: </label>
-    <select id="ditherMethod">
-      <option value="none">Sin tramado</option>
-      <option value="threshold">Umbral simple</option>
-      <option value="bayer">Matriz Bayer (Retro)</option>
-      <option value="floyd">Floyd-Steinberg</option>
-    </select>
+    <label style="display: block; margin-bottom: 8px;">Método de Dithering:</label>
+    
+    <!-- Menú desplegable filtros -->
+    <div class="custom-select-wrapper" id="customDitherSelect">
+      <div class="custom-select-trigger">
+        <span class="custom-select-text">Selecciona un filtro</span>
+        <div class="custom-select-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="custom-options">
+        <div class="custom-option" data-value="threshold">Umbral simple</div>
+        <div class="custom-option" data-value="bayer">Matriz Bayer (Retro)</div>
+        <div class="custom-option" data-value="floyd">Floyd-Steinberg</div>
+      </div>
+    </div>
+
+    <!-- Input oculto para mantener compatibilidad con tu código actual -->
+    <input type="hidden" id="ditherMethod" value="none">
   </div>
-<div style="margin-bottom: 10px;">
-  <label for="palettePreset">Preset de Paleta: </label>
-  <select id="palettePreset">
-    <option value="grays">Escala de Grises ⚪</option>
-    <option value="dmg">Game Boy Clásica (DMG) 🟢</option>
-  </select>
 </div>
-  <h3 style="margin-top: 15px;">Paleta de 16 Colores</h3>
-  <div id="paletteContainer" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 320px; margin: 0 auto;"></div>
+
+    <!-- Selector de paletas -->
+<div style="margin-bottom: 15px;">
+  <label style="margin-bottom: 8px; font-weight: 300;">Paleta seleccionada:</label>
+
+  <!-- Desplegable personalizado estilo tarjetas -->
+  <div class="palette-select-wrapper" id="customPaletteSelect">
+    <div class="palette-select-trigger">
+      <div class="selected-palette-info">
+        <span class="palette-name-text">grays</span>
+        <div class="palette-gradient-preview" id="triggerGradientPreview" style="background: linear-gradient(to right, #000000, #555555, #aaaaaa, #ffffff);"></div>
+      </div>
+      <div class="palette-select-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Opciones predefinidas quemadas en el DOM -->
+    <div class="palette-options-grid" id="paletteOptionsGrid">
+      
+      <!-- Opción 1: Escala de Grises -->
+      <div class="palette-card-option selected" data-value="grays">
+        <span class="palette-card-title">grays</span>
+        <div class="palette-gradient-preview" style="background: linear-gradient(to right, #000000, #555555, #aaaaaa, #ffffff);"></div>
+      </div>
+
+      <!-- Opción 2: Game Boy Clásica (DMG) -->
+      <div class="palette-card-option" data-value="dmg">
+        <span class="palette-card-title">dmg</span>
+        <div class="palette-gradient-preview" style="background: linear-gradient(to right, #0f380f, #306230, #8bac0f, #9bbc0f);"></div>
+      </div>
+
+    </div>
+  </div>
+  <!-- Input oculto para mantener compatibilidad con tu JS actual -->
+  <input type="hidden" id="palettePreset" value="grays">
+</div>
+
+  <h3 style="margin-top: 15px;">Colores</h3>
+  
+  <div id="paletteContainer"></div>
 <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-  <button id="invertBtn">Invertir ↕️</button>
+  <button id="invertBtn">Invertir ↔️</button>
   <button id="resetBtn">Resetear ↩️</button>
-    <button id="save">Guardar color</button>
+  <button id="save">Guardar color</button>
+  <button id="delete">Eliminar paleta</button>
 </div>
   <button id="processBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer;">
     Ejecutar filtro 🎮
   </button>
-  <button id="downloadBtn" style="margin-top: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer;">
-  Guardar imagen 💾
-</button>
 </div>
   <!-- Canvas final con la resolución objetivo de 1080x972 (proporción 10:9) -->
-  <canvas id="gameboyCanvas" width="1080" height="972"></canvas>
+<canvas id="gameboyCanvas" width="1080" height="972"></canvas>
+<div><button id="downloadBtn" style="margin-top: 30px; padding: 10px 20px; font-size: 16px; cursor: pointer;">Descargar</button></div>
+</button>
+<!---->
   <script src="script.js"></script>
+<!---->
 </body>
 </html>
