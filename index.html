@@ -1,122 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f380f">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Boy Camera Filter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PixelArt App</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/pixelart.css">
 </head>
-
 <body>
 
-  <h1>PhotoLab</h1>
- <!-- botón de cargar imagen -->
-<button type="button" id="loadImgBtn" class="expand">
-  <span class="btn-text">Cargar Imagen</span>
-  <span class="expand-icon expand-hover">
-    <svg class="first" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 32 32">
-      <path d="M8.489 31.975c-0.271 0-0.549-0.107-0.757-0.316-0.417-0.417-0.417-1.098 0-1.515l14.258-14.264-14.050-14.050c-0.417-0.417-0.417-1.098 0-1.515s1.098-0.417 1.515 0l14.807 14.807c0.417 0.417 0.417 1.098 0 1.515l-15.015 15.022c-0.208 0.208-0.486 0.316-0.757 0.316z"/>
-    </svg>
-    <span class="loader"></span>
-    <svg class="second" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 5L8 15l-5-4"/>
-    </svg>
-  </span>
-</button>
-<!--  input de archivo (oculto en segundo plano) -->
-<input type="file" id="imageInput" accept="image/*" style="display: none;">
-<!-- botón de filtro -->
-<div id="controls" style="margin: 15px 0; text-align: center;">
-  <div>
-    <label style="display: block; margin-bottom: 8px;">Método de Dithering:</label>
+  <!-- MARCO DE TELÉFONO MÓVIL -->
+  <div class="mobile-frame">
     
-    <!-- Menú desplegable filtros -->
-    <div class="custom-select-wrapper" id="customDitherSelect">
-      <div class="custom-select-trigger">
-        <span class="custom-select-text">Selecciona un filtro</span>
-        <div class="custom-select-arrow">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
-      </div>
-
-      <div class="custom-options">
-        <div class="custom-option" data-value="threshold">Umbral simple</div>
-        <div class="custom-option" data-value="bayer">Matriz Bayer (Retro)</div>
-        <div class="custom-option" data-value="floyd">Floyd-Steinberg</div>
-      </div>
+    <!-- Notch / Isla dinámica superior -->
+    <div class="mobile-notch">
+      <div class="camera-lens"></div>
     </div>
 
-    <!-- Input oculto para mantener compatibilidad con tu código actual -->
-    <input type="hidden" id="ditherMethod" value="none">
-  </div>
-</div>
-
-    <!-- Selector de paletas -->
-<div style="margin-bottom: 15px;">
-  <label style="margin-bottom: 8px; font-weight: 300;">Paleta seleccionada:</label>
-
-  <!-- Desplegable personalizado estilo tarjetas -->
-  <div class="palette-select-wrapper" id="customPaletteSelect">
-    <div class="palette-select-trigger">
-      <div class="selected-palette-info">
-        <span class="palette-name-text">grays</span>
-        <div class="palette-gradient-preview" id="triggerGradientPreview" style="background: linear-gradient(to right, #000000, #555555, #aaaaaa, #ffffff);"></div>
-      </div>
-      <div class="palette-select-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </div>
-    </div>
-
-    <!-- Opciones predefinidas quemadas en el DOM -->
-    <div class="palette-options-grid" id="paletteOptionsGrid">
+    <!-- PANTALLA MÓVIL (Con scroll interno) -->
+    <div class="mobile-screen">
       
-      <!-- Opción 1: Escala de Grises -->
-      <div class="palette-card-option selected" data-value="grays">
-        <span class="palette-card-title">grays</span>
-        <div class="palette-gradient-preview" style="background: linear-gradient(to right, #000000, #555555, #aaaaaa, #ffffff);"></div>
-      </div>
+      <!-- Barra superior estilo App -->
+      <header class="app-header">
+        <span class="app-status">alfa</span>
+        <h1 class="app-title">PixelArt Studio</h1>
+        <div class="app-badge">v1.0</div>
+      </header>
 
-      <!-- Opción 2: Game Boy Clásica (DMG) -->
-      <div class="palette-card-option" data-value="dmg">
-        <span class="palette-card-title">dmg</span>
-        <div class="palette-gradient-preview" style="background: linear-gradient(to right, #0f380f, #306230, #8bac0f, #9bbc0f);"></div>
-      </div>
+      <!-- CONTENIDO PRINCIPAL DE TU APP -->
+      <main class="app-content view-pixelart">
+        
+        <!-- Botón Cargar Imagen -->
+        <button id="loadImgBtn" class="expand">
+          <span>Seleccionar foto</span>
+          <div class="expand-icon">
+            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </div>
+        </button>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <!-- Lienzo (Canvas) -->
+        <div class="canvas-wrapper">
+          <canvas id="gameboyCanvas" width="160" height="144"></canvas>
+        </div>
+        <div style="display: flex; justify-content: center;">
+          <button id="processBtn" class="btn-pixelart btn-pixelart--primary">Procesar Imagen 🎮</button>
+        </div>
+        <!-- Selector Dithering -->
+        <div class="control-group">
+          <label>Algoritmo Dithering</label>
+          <div id="customDitherSelect" class="custom-select-wrapper">
+            <div class="custom-select-trigger">
+              <span class="custom-select-text">Ninguno</span>
+              <span>▼</span>
+            </div>
+            <div class="custom-options">
+              <div class="custom-option selected" data-value="none">Ninguno (Umbral)</div>
+              <div class="custom-option" data-value="bayer4">Matriz Bayer 4x4</div>
+              <div class="custom-option" data-value="bayer8">Matriz Bayer 8x8</div>
+              <div class="custom-option" data-value="floyd">Floyd-Steinberg</div>
+              <div class="custom-option" data-value="atkinson">Atkinson (Mac OS Retro)</div>
+              <div class="custom-option" data-value="sierra">Sierra-Lite</div>
+            </div>
+            <input type="hidden" id="ditherMethod" value="none">
+          </div>
+        </div>
 
+        <!-- Selector Paleta -->
+        <div class="control-group">
+          <label>Paleta de Color</label>
+          <div id="customPaletteSelect" class="palette-select-wrapper">
+            <div class="palette-select-trigger">
+              <span class="palette-name-text">grays</span>
+              <div id="triggerGradientPreview"></div>
+            </div>
+            <div id="paletteOptionsGrid" class="palette-options-grid"></div>
+            <select id="palettePreset" style="display:none;"></select>
+          </div>
+        </div>
+
+        <!-- Contenedor dinámico de colores y barra -->
+        <div id="paletteContainer"></div>
+        <div class="palete-buttons-grid">
+            <button id="save" class="btn-pixelart">Guardar Paleta </button>
+            <button id="delete" class="btn-pixelart btn-pixelart--danger">Eliminar Paleta</button>
+        </div>
+        <!-- Rejilla de botones -->
+        <div class="action-buttons-grid">
+          <button id="invertBtn" class="btn-pixelart">Invertir ↔️</button>
+          <button id="resetBtn" class="btn-pixelart">Resetear ↩️</button>
+        </div>
+
+        <button id="downloadBtn">Descargar</button>
+
+      </main>
+
+      <!-- Barra inferior del sistema móvil -->
+      <footer class="app-home-bar">
+        <div class="home-indicator"></div>
+      </footer>
     </div>
   </div>
-  <!-- Input oculto para mantener compatibilidad con tu JS actual -->
-  <input type="hidden" id="palettePreset" value="grays">
-</div>
 
-  <h3 style="margin-top: 15px;">Colores</h3>
-  
-  <div id="paletteContainer"></div>
-<div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
-  <button id="invertBtn">Invertir ↔️</button>
-  <button id="resetBtn">Resetear ↩️</button>
-  <button id="save">Guardar color</button>
-  <button id="delete">Eliminar paleta</button>
-</div>
-  <button id="processBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer;">
-    Ejecutar filtro 🎮
-  </button>
-</div>
-  <!-- Canvas final con la resolución objetivo de 1080x972 (proporción 10:9) -->
-<canvas id="gameboyCanvas" width="1080" height="972"></canvas>
-<div><button id="downloadBtn" style="margin-top: 30px; padding: 10px 20px; font-size: 16px; cursor: pointer;">Descargar</button></div>
-</button>
-<!---->
-  <script src="script.js"></script>
-<!---->
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
